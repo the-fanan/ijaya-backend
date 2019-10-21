@@ -101,7 +101,6 @@ trait RestResponse
             'status' => false,
             'message'     => $message,
             'data'  => $data,
-            'errors' => $data,
             'status_code' => $this->getStatusCode()
         ], $headers);
     }
@@ -130,10 +129,10 @@ trait RestResponse
      *
      * @return \Illuminate\Http\JsonResponse The JSON-response with the error code
      */
-    protected function respondBadRequest($message = 'Bad request', $headers = [ ])
+    protected function respondBadRequest($message = 'Bad request', $data = null,$headers = [ ])
     {
         $this->setStatusCode(IlluminateResponse::HTTP_BAD_REQUEST);
-        return $this->respondWithError($message, $headers);
+        return $this->respondWithError($message, $data, $headers);
     }
 
     /**
