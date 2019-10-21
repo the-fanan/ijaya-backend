@@ -24,9 +24,7 @@ class ContactController extends Controller
             if ($validator->fails()) {
                 return $this->respondBadRequest(ResponseMessage::INPUT_ERROR, $validator->errors()->toArray());
             }
-
-            $data = $request->only(["name", "email"]);
-            NewsletterSubscriber::create($data);
+            NewsletterSubscriber::create($request->only(["name", "email"]));
             return $this->respondWithSuccess(ResponseMessage::NEWSLETTER_SUCCESS);
         } catch (\Exception $exception) {
             if (app()->isLocal() || app()->runningUnitTests()){
@@ -38,6 +36,25 @@ class ContactController extends Controller
 
     public function addContactMessage(Request $request)
     {
+        try {
+            $rules = [
+                'name' => 'required|max:255',
+                'email' => 'required|email',
+                'message' => 'required',
+            ];
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                return $this->respondBadRequest(ResponseMessage::INPUT_ERROR, $validator->errors()->toArray());
+            }
+            Contact::create($request->only(["name", "email", "message"]));
+            //send out mail to admin
+            return $this->respondWithSuccess(ResponseMessage::CONTACT_SUCCESS);
+        } catch (\Exception $exception) {
+            if (app()->isLocal() || app()->runningUnitTests()){
+                return $this->respondInternalError(ResponseMessage::SERVER_ERROR . " Error: " . $exception->getMessage());
+            }
+            return $this->respondInternalError(ResponseMessage::SERVER_ERROR);
+        }
         //add contact message to database
         //send email to contact@ijayamanagement
     }

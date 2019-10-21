@@ -17,6 +17,8 @@ class ContactTest extends TestCase
     private $contactController;
     private $validSubscriber = ["name" => "Fanan Dala", "email" => "fanan123@yahoo.com"];
     private $invalidSubscriber = ["email" => "fanan123"];
+    private $validContactor = ["name" => "Fanan Dala", "email" => "fanan123@yahoo.com", "message" => "A test message"];
+    private $invalidContactor = ["email" => "fanan123"];
 
     public function setUp() :void
     {
@@ -66,6 +68,35 @@ class ContactTest extends TestCase
 
         $this->assertEquals(ResponseMessage::INPUT_ERROR, $response2->getData()->message);
         $this->assertObjectHasAttribute('email',$response2->getData()->data);
+    }
+
+    /**
+     * Tests whether addContactMessage works in contact controller
+     *
+     * @return void
+     */
+    public function testAddContactMessageSuccessful()
+    {
+        $request = Request::create('/api/contact/message', 'POST', $this->validContactor);
+        $response = $this->contactController->addContactMessage($request);
+        $this->assertEquals(ResponseMessage::CONTACT_SUCCESS, $response->getData()->message);
+        $this->assertDatabaseHas('contacts', $this->validContactor);
+    }
+
+    /**
+     * Tests whether addContactMessage fails if details are not complete
+     *
+     * @return void
+     */
+    public function testAddContactMessageFailForIncompleteDetails()
+    {
+        $request = Request::create('/api/contact/message', 'POST', $this->invalidContactor);
+        $response = $this->contactController->addContactMessage($request);
+        $this->assertEquals(ResponseMessage::INPUT_ERROR, $response->getData()->message);
+        $this->assertObjectHasAttribute('name',$response->getData()->data);
+        $this->assertObjectHasAttribute('email',$response->getData()->data);
+        $this->assertObjectHasAttribute('message',$response->getData()->data);
+        $this->assertDatabaseMissing('contacts', $this->invalidContactor);
     }
 
     public function tearDown() :void
