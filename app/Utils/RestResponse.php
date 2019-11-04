@@ -100,7 +100,7 @@ trait RestResponse
         return $this->respond([
             'status' => false,
             'message'     => $message,
-            'data'  => $data,
+            'errors'  => $data,
             'status_code' => $this->getStatusCode()
         ], $headers);
     }
