@@ -55,7 +55,5 @@ class ContactController extends Controller
             }
             return $this->respondInternalError(ResponseMessage::SERVER_ERROR);
         }
-        //add contact message to database
-        //send email to contact@ijayamanagement
     }
 }
