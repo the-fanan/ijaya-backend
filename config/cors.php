@@ -13,7 +13,7 @@ return [
     */
    
     'supportsCredentials' => false,
-    'allowedOrigins' => ['http://localhost:3000', 'https://ijayamanagement.com'],
+    'allowedOrigins' => ['http://localhost:3000', 'https://ijayamanagement.com', 'https://www.ijayamanagement.com', 'https://ijayamanagement.com/', 'https://www.ijayamanagement.com/'],
     'allowedOriginsPatterns' => [],
     'allowedHeaders' => ['*'],
     'allowedMethods' => ['*'],
